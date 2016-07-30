@@ -32,5 +32,14 @@ function getItemAmount(tags) {
     itemsAmount = mergeBarcodes(formatedTags);
     return itemsAmount;
 }
-
-module.exports = {getItemAmount};
+function getPromotionItems(promotions, itemsAmount) {
+    let promotionItems = [];
+    itemsAmount.map(item=>{
+        let promotion = promotions.find
+        (promotion => promotion.barcodes.some(b => b === item.barcode));
+        let type = promotion ? promotion.type : null;
+        promotionItems.push(Object.assign({}, item, {type: type}));
+    });
+    return promotionItems;
+}
+module.exports = {getItemAmount,getPromotionItems};
