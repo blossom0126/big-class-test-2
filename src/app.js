@@ -78,4 +78,20 @@ function calculatePromotionSubtotal(primalSubtotal) {
     });
     return promotionSubtotal;
 }
-module.exports={getItemAmount,getPromotionItems,calculatePrimalSubtotal, calculatePromotionSubtotal};
+function calculateTotal(promotionSubtotal) {
+    let total = [];
+    let promotionTotal = 0;
+    let primalTotal = 0;promotionSubtotal.map(item=> {
+        primalTotal += item.primalSubtotal;
+        promotionTotal += item.promotionSubtotal;
+    });
+    total.push(Object.assign({primalTotal: primalTotal}, {promotionTotal: promotionTotal}));
+    return total;
+}
+function calculateSaveTotal(total) {
+    let saveTotal = total[0].primalTotal - total[0].promotionTotal;
+    return saveTotal;
+}
+module.exports={getItemAmount,getPromotionItems,calculatePrimalSubtotal,
+    calculatePromotionSubtotal,calculateTotal,
+    calculateSaveTotal};

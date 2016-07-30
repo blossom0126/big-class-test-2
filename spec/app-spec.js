@@ -249,4 +249,60 @@ describe('pos', () => {
             expect(promotionSubtotal).toEqual(expectedpromotionSubtotal);
         });
     });
+    describe('calculateTotal', ()=> {
+        const promotionSubtotal =[{
+            barcode: 'ITEM000001',
+            name: '雪碧',
+            unit: '瓶',
+            price: 3.00,
+            count: 5,
+            primalSubtotal:15.00,
+            promotionSubtotal:12.00,
+            type: 'BUY_TWO_GET_ONE_FREE'
+        },
+            {
+                barcode: 'ITEM000003',
+                name: '荔枝',
+                unit: '斤',
+                price: 15.00,
+                count: 2.5,
+                primalSubtotal:37.50,
+                promotionSubtotal:37.50,
+                type: null
+            },
+            {
+                barcode: 'ITEM000005',
+                name: '方便面',
+                unit: '袋',
+                price: 4.50,
+                count: 3,
+                primalSubtotal:13.50,
+                promotionSubtotal:9.00,
+                type: 'BUY_TWO_GET_ONE_FREE'
+            }
+        ];
+        it('should calculate "total" of items', ()=> {
+            const total = app.calculateTotal(promotionSubtotal);
+            const expectedtotal = [
+                {
+                    primalTotal:66.00,
+                    promotionTotal: 58.50
+                }
+            ];
+            expect(total).toEqual(expectedtotal);
+        });
+    });
+    describe('calculateSaveTotal', ()=> {
+        const total = [
+            {
+                primalTotal:66.00,
+                promotionTotal: 58.50
+            }
+        ];
+        it('should calculate "savetotal" of items', ()=> {
+            const saveTotal = app.calculateSaveTotal(total);
+            const expectedsaveTotal = 7.50;
+            expect(saveTotal).toEqual(expectedsaveTotal);
+        });
+    });
 });
