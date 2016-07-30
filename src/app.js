@@ -42,4 +42,23 @@ function getPromotionItems(promotions, itemsAmount) {
     });
     return promotionItems;
 }
-module.exports = {getItemAmount,getPromotionItems};
+function calculatePrimalSubtotal(allItems, itemsAmount, promotionItems) {
+    let primalSubtotal = [];
+    let primalItems = [];
+    let primalItemstype = [];
+    itemsAmount.map(item=>{
+        allItems.map(itema=>{
+            if (itema.barcode === item.barcode) {
+                primalItems.push(Object.assign({}, itema, {count: item.count}));
+            }});
+    });
+    for (let i = 0; i < promotionItems.length; i++) {
+        primalItemstype.push(Object.assign({}, primalItems[i], {type: promotionItems[i].type}));
+    }
+    for (let i = 0; i < primalItems.length; i++) {
+        primalSubtotal.push(Object.assign({}, primalItemstype[i], {primalSubtotal: (primalItems[i].price * primalItems[i].count)}));
+    }
+    return primalSubtotal;
+}
+
+module.exports={getItemAmount,getPromotionItems,calculatePrimalSubtotal};
