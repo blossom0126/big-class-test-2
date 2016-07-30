@@ -32,7 +32,6 @@ describe('pos', () => {
 
         });
     });
-
     describe('getPromotionItems', ()=> {
         const promotions = [
             {
@@ -180,6 +179,74 @@ describe('pos', () => {
                 }
             ];
             expect(primalSubtotal).toEqual(expectedprimalSubtotal);
+        });
+    });
+    describe('calculatePromotionSubtotal', ()=> {
+
+        const primalSubtotal = [
+            {
+                barcode: 'ITEM000001',
+                name: '雪碧',
+                unit: '瓶',
+                price: 3.00,
+                count: 5,
+                primalSubtotal:15.00,
+                type: 'BUY_TWO_GET_ONE_FREE'
+            },
+            {
+                barcode: 'ITEM000003',
+                name: '荔枝',
+                unit: '斤',
+                price: 15.00,
+                count: 2.5,
+                primalSubtotal:37.50,
+                type: null
+            },
+            {
+                barcode: 'ITEM000005',
+                name: '方便面',
+                unit: '袋',
+                price: 4.50,
+                count: 3,
+                primalSubtotal:13.50,
+                type: 'BUY_TWO_GET_ONE_FREE'
+            }
+        ];
+        it('should calculate "promotionSubtotal" of items', ()=> {
+            const promotionSubtotal = app.calculatePromotionSubtotal(primalSubtotal);
+            const expectedpromotionSubtotal = [
+                {
+                    barcode: 'ITEM000001',
+                    name: '雪碧',
+                    unit: '瓶',
+                    price: 3.00,
+                    count: 5,
+                    primalSubtotal:15.00,
+                    promotionSubtotal:12.00,
+                    type: 'BUY_TWO_GET_ONE_FREE'
+                },
+                {
+                    barcode: 'ITEM000003',
+                    name: '荔枝',
+                    unit: '斤',
+                    price: 15.00,
+                    count: 2.5,
+                    primalSubtotal:37.50,
+                    promotionSubtotal:37.50,
+                    type: null
+                },
+                {
+                    barcode: 'ITEM000005',
+                    name: '方便面',
+                    unit: '袋',
+                    price: 4.50,
+                    count: 3,
+                    primalSubtotal:13.50,
+                    promotionSubtotal:9.00,
+                    type: 'BUY_TWO_GET_ONE_FREE'
+                }
+            ];
+            expect(promotionSubtotal).toEqual(expectedpromotionSubtotal);
         });
     });
 });

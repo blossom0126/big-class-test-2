@@ -52,13 +52,30 @@ function calculatePrimalSubtotal(allItems, itemsAmount, promotionItems) {
                 primalItems.push(Object.assign({}, itema, {count: item.count}));
             }});
     });
-    for (let i = 0; i < promotionItems.length; i++) {
-        primalItemstype.push(Object.assign({}, primalItems[i], {type: promotionItems[i].type}));
-    }
-    for (let i = 0; i < primalItems.length; i++) {
-        primalSubtotal.push(Object.assign({}, primalItemstype[i], {primalSubtotal: (primalItems[i].price * primalItems[i].count)}));
-    }
+    promotionItems.map(item=> {
+        primalItemstype.push(Object.assign({}, primalItems[promotionItems.indexOf(item)],
+            {type: item.type}));
+    });
+    primalItems.map(item=> {
+        primalSubtotal.push(Object.assign({},
+            primalItemstype[primalItems.indexOf(item)],
+            {primalSubtotal: (item.price * item.count)}));
+    });
     return primalSubtotal;
 }
-
-module.exports={getItemAmount,getPromotionItems,calculatePrimalSubtotal};
+function calculatePromotionSubtotal(primalSubtotal) {
+    let promotionSubtotal = [];
+    let promotionArr = [];
+    primalSubtotal.map( item=>{
+        let promtioncount = parseInt(item.count / 3);
+        if (item.type === 'BUY_TWO_GET_ONE_FREE') {
+            promotionArr[primalSubtotal.indexOf(item)] = parseFloat((item.count - promtioncount) * item.price);
+        }
+        else {
+            promotionArr[primalSubtotal.indexOf(item)] = item.primalSubtotal;
+        }
+        promotionSubtotal.push(Object.assign({}, item, {promotionSubtotal: promotionArr[primalSubtotal.indexOf(item)]}))
+    });
+    return promotionSubtotal;
+}
+module.exports={getItemAmount,getPromotionItems,calculatePrimalSubtotal, calculatePromotionSubtotal};
