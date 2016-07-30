@@ -1,4 +1,5 @@
 'use strict';
+let app = require('../spec/fixture');
 function getItemAmount(tags) {
     let itemsAmount = [];
 
@@ -92,6 +93,36 @@ function calculateSaveTotal(total) {
     let saveTotal = total[0].primalTotal - total[0].promotionTotal;
     return saveTotal;
 }
+function print(promotionSubtotal, total, saveTotal) {
+    let header = '***<没钱赚商店>收据***\n';
+    let footer = '----------------------\n' +
+        '总计：' + total[0].promotionTotal.toFixed(2) + '(元)\n' +
+        '节省：' + saveTotal.toFixed(2) + '(元)\n' +
+        '**********************';
+    let body = '';
+    let receipt = '';
+    promotionSubtotal.map(item=> {
+        let itemReceipt = '名称：' + item.name +
+            '，数量：' + item.count + item.unit +
+            '，单价：' + item.price.toFixed(2) +
+            '(元)，小计：' + item.promotionSubtotal.toFixed(2) + '(元)\n';
+        body = body.concat(itemReceipt);
+    });
+    receipt = receipt.concat(header).concat(body).concat(footer);
+    return receipt;
+}
+function printReceipt(tags) {
+    let allItems = app.loadAllItems();
+    let promotions = app.loadPromotions();
+    let itemsAmount = getItemAmount(tags);
+    let promotionItems = getPromotionItems(promotions, itemsAmount);
+    let primalSubtotal = calculatePrimalSubtotal(allItems, itemsAmount, promotionItems);
+    let promotionSubtotal = calculatePromotionSubtotal(primalSubtotal);
+    let total = calculateTotal(promotionSubtotal);
+    let saveTotal = calculateSaveTotal(total);
+    let receipt = print(promotionSubtotal, total, saveTotal);
+    return receipt;
+}
 module.exports={getItemAmount,getPromotionItems,calculatePrimalSubtotal,
     calculatePromotionSubtotal,calculateTotal,
-    calculateSaveTotal};
+    calculateSaveTotal,printReceipt};
